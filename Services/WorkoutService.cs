@@ -1,3 +1,6 @@
+using System.Net;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
 using VodjeniTrening.Models;
 
@@ -11,10 +14,8 @@ public interface IWorkoutService
 public sealed class WorkoutDataException(string message, Exception? innerException = null)
     : Exception(message, innerException);
 
-public sealed class WorkoutService : IWorkoutService
+public sealed class WorkoutService(HttpClient httpClient) : IWorkoutService
 {
-    private const string FileName = "vezbe.json";
-
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
         PropertyNameCaseInsensitive = true
@@ -24,12 +25,34 @@ public sealed class WorkoutService : IWorkoutService
     {
         try
         {
-            await using var stream = await FileSystem.OpenAppPackageFileAsync(FileName);
+            using var loginResponse = await httpClient.PostAsJsonAsync(
+                "login",
+                new LoginRequest(ApiSettings.UserName, ApiSettings.UserPassword),
+                cancellationToken);
+
+            if (loginResponse.StatusCode == HttpStatusCode.Unauthorized)
+                throw new WorkoutDataException("Prijava na server nije uspela. Proverite korisničko ime i lozinku.");
+
+            loginResponse.EnsureSuccessStatusCode();
+            var login = await loginResponse.Content.ReadFromJsonAsync<LoginResponse>(
+                JsonOptions, cancellationToken)
+                ?? throw new WorkoutDataException("Server nije vratio podatke nakon prijave.");
+
+            using var trainingRequest = new HttpRequestMessage(HttpMethod.Get, "GetTraining");
+            trainingRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", login.Token);
+
+            using var trainingResponse = await httpClient.SendAsync(trainingRequest, cancellationToken);
+            if (trainingResponse.StatusCode == HttpStatusCode.Unauthorized)
+                throw new WorkoutDataException("Sesija je odbijena. Pokušajte ponovo.");
+
+            trainingResponse.EnsureSuccessStatusCode();
+
+            await using var stream = await trainingResponse.Content.ReadAsStreamAsync(cancellationToken);
             var document = await JsonSerializer.DeserializeAsync<WorkoutDocument>(
                 stream, JsonOptions, cancellationToken);
 
             var workout = document?.Workout
-                ?? throw new WorkoutDataException("JSON fajl ne sadrži podatke o treningu.");
+                ?? throw new WorkoutDataException("Server nije vratio podatke o treningu.");
 
             Validate(workout);
             return workout;
@@ -38,17 +61,22 @@ public sealed class WorkoutService : IWorkoutService
         {
             throw;
         }
-        catch (FileNotFoundException exception)
+        catch (TaskCanceledException exception) when (!cancellationToken.IsCancellationRequested)
         {
-            throw new WorkoutDataException("Fajl vezbe.json nije pronađen u aplikaciji.", exception);
+            throw new WorkoutDataException("Server za trening nije odgovorio na vreme.", exception);
+        }
+        catch (HttpRequestException exception)
+        {
+            throw new WorkoutDataException(
+                "Nije moguće povezivanje sa serverom za trening. Proverite internet konekciju.", exception);
         }
         catch (JsonException exception)
         {
-            throw new WorkoutDataException("Fajl vezbe.json nije ispravan JSON dokument.", exception);
+            throw new WorkoutDataException("Server je vratio neispravan JSON dokument.", exception);
         }
         catch (Exception exception)
         {
-            throw new WorkoutDataException("Trening nije moguće učitati. Proverite fajl vezbe.json.", exception);
+            throw new WorkoutDataException("Trening nije moguće učitati sa servera.", exception);
         }
     }
 
@@ -105,4 +133,14 @@ public sealed class WorkoutService : IWorkoutService
             }
         }
     }
+
+    private sealed record LoginRequest(string UserName, string UserPassword);
+    private sealed record LoginResponse(string Token, DateTimeOffset ExpiresAtUtc);
+}
+
+public static class ApiSettings
+{
+    public const string BaseUrl = "http://85.215.209.4:8081/";
+    public const string UserName = "vodjenitrening";
+    public const string UserPassword = "PromeniMe-8081!";
 }

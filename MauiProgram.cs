@@ -21,6 +21,11 @@ public static class MauiProgram
 		builder.Logging.AddDebug();
 #endif
 
+		builder.Services.AddSingleton(new HttpClient
+		{
+			BaseAddress = new Uri(ApiSettings.BaseUrl),
+			Timeout = TimeSpan.FromSeconds(15)
+		});
 		builder.Services.AddSingleton<IWorkoutService, WorkoutService>();
 		builder.Services.AddSingleton<WorkoutViewModel>();
 		builder.Services.AddSingleton<MainPage>();

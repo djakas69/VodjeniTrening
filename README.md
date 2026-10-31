@@ -1,39 +1,101 @@
 # Vođeni trening
 
-Jednostavna one-page .NET MAUI aplikacija za iOS i Android. Trening se učitava iz
-`Resources/Raw/vezbe.json`, a interfejs i odbrojavanje rade kroz MVVM state machine.
+Repozitorijum sadrži dva .NET 10 projekta:
 
-## Pokretanje u Rider-u
+- `VodjeniTrening.csproj` — .NET MAUI aplikacija za iOS i Android.
+- `VodjeniTreningApi/VodjeniTreningApi.csproj` — ASP.NET Core API koji sluša na portu 8081.
+
+MAUI aplikacija se pri pokretanju prijavljuje na API, dobija privremeni Bearer token,
+a zatim preuzima aktuelni trening preko `GetTraining` endpointa.
+
+## API endpointi
+
+### `POST /login`
+
+Zahtev:
+
+```json
+{
+  "userName": "vodjenitrening",
+  "userPassword": "PromeniMe-8081!"
+}
+```
+
+Uspešan odgovor sadrži token koji važi 12 sati:
+
+```json
+{
+  "token": "...",
+  "expiresAtUtc": "..."
+}
+```
+
+### `GET /GetTraining`
+
+Zahteva zaglavlje `Authorization: Bearer TOKEN` i vraća sadržaj fajla
+`VodjeniTreningApi/Data/vezbe.json`.
+
+### `GET /health`
+
+Javna provera da li je servis pokrenut.
+
+## Pokretanje API-ja
+
+```bash
+dotnet run --project VodjeniTreningApi/VodjeniTreningApi.csproj
+```
+
+API sluša na `http://0.0.0.0:8081`. Za objavljivanje:
+
+```bash
+dotnet publish VodjeniTreningApi/VodjeniTreningApi.csproj -c Release -o publish/VodjeniTreningApi
+```
+
+Na server treba kopirati sadržaj publish direktorijuma i pokrenuti:
+
+```bash
+dotnet VodjeniTreningApi.dll
+```
+
+Port 8081 mora biti dozvoljen u firewall-u servera. Pre javnog puštanja promenite
+korisničko ime i lozinku pomoću server environment promenljivih:
+
+```text
+Authentication__UserName
+Authentication__UserPassword
+```
+
+Iste vrednosti za ovu početnu verziju moraju biti upisane u `ApiSettings` u
+`Services/WorkoutService.cs`, pa aplikacija mora biti ponovo build-ovana.
+
+## Pokretanje MAUI aplikacije
 
 1. Otvorite `VodjeniTrening.csproj` ili ceo direktorijum u JetBrains Rider-u.
 2. Sačekajte da Rider završi restore.
-3. Izaberite iOS Simulator ili Android emulator kao run target.
+3. Izaberite iOS Simulator na Mac-u ili Android uređaj/emulator na Windows-u.
 4. Pokrenite konfiguraciju `VodjeniTrening` preko **Run** ili **Debug**.
 
-Za komandnu liniju na macOS-u:
-
-```bash
-dotnet restore VodjeniTrening.csproj
-dotnet build VodjeniTrening.csproj -f net10.0-ios
-dotnet build VodjeniTrening.csproj -f net10.0-android -p:EnableAndroidTarget=true
-```
-
-Za Android je prvo potreban instaliran `maui-android` workload. Nakon instalacije
-uključite Android target pomoću `-p:EnableAndroidTarget=true`, odnosno dodajte tu
-MSBuild osobinu u Rider build konfiguraciju. Projekat ne instalira niti ažurira
-razvojne alate automatski.
+Na Mac-u projekat automatski koristi `net10.0-ios`, a na Windows-u
+`net10.0-android`.
 
 ## Izmena treninga
 
-Svaki objekat u `blokovi` predstavlja blok. Dodajte mu naziv, broj krugova, pauzu
-između krugova, pauzu nakon bloka i najmanje jednu vežbu. Vežba tipa `vreme` koristi
-`trajanjeSekundi`, a vežba tipa `ponavljanja` koristi `brojPonavljanja` i
-`trajanjePonavljanjaSekundi`. Poslednje polje određuje koliko sekundi traje jedno
-ponavljanje; prikaz se automatski odbrojava do nule.
+Aktuelni trening nalazi se samo u:
 
-Sve vrednosti trajanja su u sekundama. `pauzaNakonVezbeSekundi` važi samo kada u
-istom krugu postoji sledeća vežba. Na kraju kruga koristi se
-`pauzaIzmedjuKrugovaSekundi`, a na kraju bloka `pauzaNakonBlokaSekundi`.
+```text
+VodjeniTreningApi/Data/vezbe.json
+```
+
+Svaki objekat u `blokovi` predstavlja blok. Vežba tipa `vreme` koristi
+`trajanjeSekundi`, a vežba tipa `ponavljanja` koristi `brojPonavljanja` i
+`trajanjePonavljanjaSekundi`. Sve vrednosti trajanja su u sekundama.
+
+## Bezbednost
+
+Trenutna javna adresa `http://85.215.209.4:8081/` koristi HTTP, pa se login podaci
+i token prenose bez enkripcije. Android i iOS su privremeno podešeni da dozvole
+ovu konekciju. Pre produkcijske upotrebe treba postaviti HTTPS reverse proxy i
+vratiti zabranu nešifrovanog saobraćaja u mobilnoj aplikaciji.
 
 ## Platforme
 
@@ -42,6 +104,3 @@ istom krugu postoji sledeća vežba. Na kraju kruga koristi se
 
 iOS 13 nije podržan ovim instaliranim MAUI 10 toolchain-om. Za taj zahtev potreban
 je zasebno održavan stariji toolchain/framework ili promena minimalne verzije uređaja.
-
-## Web Api
-VodjeniTreningApi se nalazi na adresi http://85.215.209.4:8081/

@@ -10,7 +10,7 @@
         "vezbe": [
           { "naziv": "Traka brzi hod", "tip": "vreme", "brojPonavljanja": 0, "trajanjeSekundi": 90, "trajanjePonavljanjaSekundi": 0, "pauzaNakonVezbeSekundi": 12 },
           { "naziv": "Bajs", "tip": "vreme", "brojPonavljanja": 0, "trajanjeSekundi": 90, "pauzaNakonVezbeSekundi": 12 },
-          { "naziv": "Veslo", "tip": "vreme", "brojPonavljanja": 0, "trajanjeSekundi": 90, "trajanjePonavljanjaSekundi": 0,  "pauzaNakonVezbeSekundi": 12 }
+          { "naziv": "Veslo", "tip": "vreme", "brojPonavljanja": 0, "trajanjeSekundi": 90, "trajanjePonavljanjaSekundi": 0, "pauzaNakonVezbeSekundi": 12 }
         ]
       },
       {
@@ -30,17 +30,17 @@
         "pauzaIzmedjuKrugovaSekundi": 120,
         "pauzaNakonBlokaSekundi": 180,
         "vezbe": [
-          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 12, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing", "tip": "ponavljanja", "brojPonavljanja": 12, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
           { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 12, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
-          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 10, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing", "tip": "ponavljanja", "brojPonavljanja": 10, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
           { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 10, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
-          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 8, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing", "tip": "ponavljanja", "brojPonavljanja": 8, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
           { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 8, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
-          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 6, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing", "tip": "ponavljanja", "brojPonavljanja": 6, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
           { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 6, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
-          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 4, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing", "tip": "ponavljanja", "brojPonavljanja": 4, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
           { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 4, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
-          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 2, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing", "tip": "ponavljanja", "brojPonavljanja": 2, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
           { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 2, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 }
         ]
       },

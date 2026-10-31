@@ -67,6 +67,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
         SessionState.Exercise => "Vežba u toku",
         SessionState.Rest => "Preskoči pauzu",
         SessionState.Completed => "Ponovo pokreni",
+        SessionState.Error => "Pokušaj ponovo",
         _ => "Sačekajte"
     };
     public string PauseButtonText => _isPaused ? "Nastavi" : "Pauziraj";
@@ -88,6 +89,17 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
             return;
 
         _initialized = true;
+        await LoadWorkoutAsync();
+    }
+
+    private async Task LoadWorkoutAsync()
+    {
+        SetState(SessionState.Loading);
+        WorkoutName = "Učitavanje treninga…";
+        StatusText = "Povezivanje sa serverom";
+        MainValue = "—";
+        ErrorMessage = "";
+
         try
         {
             _workout = await _workoutService.LoadAsync();
@@ -117,7 +129,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
 
     private bool CanUsePrimary() => _state switch
     {
-        SessionState.Ready or SessionState.Rest or SessionState.Completed => true,
+        SessionState.Ready or SessionState.Rest or SessionState.Completed or SessionState.Error => true,
         _ => false
     };
 
@@ -136,6 +148,9 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
                 break;
             case SessionState.Completed:
                 await RestartCoreAsync();
+                break;
+            case SessionState.Error:
+                await LoadWorkoutAsync();
                 break;
         }
     });
