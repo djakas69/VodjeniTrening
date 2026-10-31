@@ -21,17 +21,15 @@ Adresa API-ja i početni pristupni podaci nalaze se u `ApiSettings` u
 `Services/WorkoutService.cs`. Trenutna API adresa je:
 
 ```text
-http://85.215.209.4:8081/
+https://api.darkojakas.de/
 ```
 
 Ako server privremeno nije dostupan, aplikacija prikazuje dugme „Pokušaj ponovo“.
 
 ## Bezbednost
 
-Trenutna javna adresa koristi HTTP, pa se login podaci i token prenose bez
-enkripcije. Android i iOS su privremeno podešeni da dozvole ovu konekciju.
-Pre produkcijske upotrebe treba postaviti HTTPS reverse proxy i vratiti zabranu
-nešifrovanog saobraćaja u mobilnoj aplikaciji.
+Komunikacija sa API-jem koristi HTTPS. Android eksplicitno zabranjuje cleartext
+saobraćaj, a iOS više nema izuzetak koji bi dozvolio nešifrovane HTTP zahteve.
 
 ## Platforme
 

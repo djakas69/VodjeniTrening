@@ -140,7 +140,7 @@ public sealed class WorkoutService(HttpClient httpClient) : IWorkoutService
 
 public static class ApiSettings
 {
-    public const string BaseUrl = "http://85.215.209.4:8081/";
+    public const string BaseUrl = "https://api.darkojakas.de/";
     public const string UserName = "vodjenitrening";
     public const string UserPassword = "PromeniMe-8081!";
 }
