@@ -1,12 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<!-- This Mac currently has the MAUI iOS workload only. Keep Rider restore/build
-		     usable, and opt into Android after installing the Android workload with:
-		     -p:EnableAndroidTarget=true -->
-		<EnableAndroidTarget Condition="'$(EnableAndroidTarget)' == ''">false</EnableAndroidTarget>
-		<TargetFrameworks>net10.0-ios</TargetFrameworks>
-		<TargetFrameworks Condition="'$(EnableAndroidTarget)' == 'true'">net10.0-android;net10.0-ios</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('OSX'))">net10.0-ios</TargetFrameworks>
+		<TargetFrameworks Condition="$([MSBuild]::IsOSPlatform('Windows'))">net10.0-android</TargetFrameworks>
 
 		<!-- Note for MacCatalyst:
 		The default runtime is maccatalyst-x64, except in Release config, in which case the default is maccatalyst-x64;maccatalyst-arm64.
