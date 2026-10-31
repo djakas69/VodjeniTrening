@@ -1,0 +1,18 @@
+# .NET / .NET MAUI build output
+bin/
+obj/
+artifacts/
+
+# Rider and Visual Studio user settings
+.idea/
+.vs/
+*.sln.iml
+*.user
+*.suo
+*.userprefs
+
+# macOS
+.DS_Store
+
+# Local tooling folders
+.dotnet-home*/
