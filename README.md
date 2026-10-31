@@ -42,3 +42,6 @@ istom krugu postoji sledeća vežba. Na kraju kruga koristi se
 
 iOS 13 nije podržan ovim instaliranim MAUI 10 toolchain-om. Za taj zahtev potreban
 je zasebno održavan stariji toolchain/framework ili promena minimalne verzije uređaja.
+
+## Web Api
+VodjeniTreningApi se nalazi na adresi http://85.215.209.4:8081/
