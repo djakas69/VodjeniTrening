@@ -1,0 +1,60 @@
+{
+  "trening": {
+    "naziv": "Dnevni trening",
+    "blokovi": [
+      {
+        "naziv": "Zagrevanje",
+        "brojKrugova": 3,
+        "pauzaIzmedjuKrugovaSekundi": 60,
+        "pauzaNakonBlokaSekundi": 180,
+        "vezbe": [
+          { "naziv": "Traka brzi hod", "tip": "vreme", "brojPonavljanja": 0, "trajanjeSekundi": 90, "trajanjePonavljanjaSekundi": 0, "pauzaNakonVezbeSekundi": 12 },
+          { "naziv": "Bajs", "tip": "vreme", "brojPonavljanja": 0, "trajanjeSekundi": 90, "pauzaNakonVezbeSekundi": 12 },
+          { "naziv": "Veslo", "tip": "vreme", "brojPonavljanja": 0, "trajanjeSekundi": 90, "trajanjePonavljanjaSekundi": 0,  "pauzaNakonVezbeSekundi": 12 }
+        ]
+      },
+      {
+        "naziv": "Trening 1",
+        "brojKrugova": 3,
+        "pauzaIzmedjuKrugovaSekundi": 60,
+        "pauzaNakonBlokaSekundi": 180,
+        "vezbe": [
+          { "naziv": "Sklekovi sa dizanjem dlanova", "tip": "ponavljanja", "brojPonavljanja": 10, "trajanjePonavljanjaSekundi": 2, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 5 },
+          { "naziv": "Iskorak naizmenicni unapred", "tip": "ponavljanja", "brojPonavljanja": 14, "trajanjePonavljanjaSekundi": 2, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 5 },
+          { "naziv": "Karike veslanje (podhvat)", "tip": "ponavljanja", "brojPonavljanja": 10, "trajanjePonavljanjaSekundi": 2, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 0 }
+        ]
+      },
+      {
+        "naziv": "Trening 2",
+        "brojKrugova": 4,
+        "pauzaIzmedjuKrugovaSekundi": 120,
+        "pauzaNakonBlokaSekundi": 180,
+        "vezbe": [
+          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 12, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 12, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 10, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 10, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 8, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 8, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 6, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 6, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 4, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 4, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Swing",                "tip": "ponavljanja", "brojPonavljanja": 2, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Kutija penjanje 50cm", "tip": "ponavljanja", "brojPonavljanja": 2, "trajanjePonavljanjaSekundi": 1, "trajanjeSekundi": 0, "pauzaNakonVezbeSekundi": 15 }
+        ]
+      },
+      {
+        "naziv": "Trening 3",
+        "brojKrugova": 4,
+        "pauzaIzmedjuKrugovaSekundi": 120,
+        "pauzaNakonBlokaSekundi": 60,
+        "vezbe": [
+          { "naziv": "Plank", "tip": "vreme", "brojPonavljanja": 0, "trajanjePonavljanjaSekundi": 2, "trajanjeSekundi": 20, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Plank Bocni 1", "tip": "vreme", "brojPonavljanja": 0, "trajanjePonavljanjaSekundi": 2, "trajanjeSekundi": 10, "pauzaNakonVezbeSekundi": 15 },
+          { "naziv": "Plank Bocni 2", "tip": "vreme", "brojPonavljanja": 0, "trajanjePonavljanjaSekundi": 2, "trajanjeSekundi": 10, "pauzaNakonVezbeSekundi": 15 }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VodjeniTrening.MainPage"
+             Title="Vođeni trening"
+             SafeAreaEdges="All"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FB, Dark=#111827}">
+    <Grid Padding="{OnPlatform iOS='20,10,20,16', Android='20,18,20,16'}"
+          RowDefinitions="Auto,Auto,*,Auto,Auto"
+          RowSpacing="12"
+          MaximumWidthRequest="620"
+          HorizontalOptions="Fill">
+        <VerticalStackLayout Grid.Row="0" Spacing="3">
+            <Label Text="{Binding WorkoutName}" FontFamily="OpenSansSemibold"
+                   FontSize="{OnIdiom Phone=24, Tablet=30}"
+                   TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}"
+                   HorizontalTextAlignment="Center" LineBreakMode="TailTruncation"
+                   SemanticProperties.HeadingLevel="Level1" />
+        </VerticalStackLayout>
+
+        <Border Grid.Row="1" Padding="14,9"
+                BackgroundColor="{AppThemeBinding Light=#FFFFFF, Dark=#1F2937}"
+                Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}" StrokeThickness="1">
+            <Border.StrokeShape><RoundRectangle CornerRadius="16" /></Border.StrokeShape>
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <Label Text="{Binding BlockName}" FontFamily="OpenSansSemibold" FontSize="17"
+                       TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}"
+                       LineBreakMode="TailTruncation" VerticalTextAlignment="Center" />
+                <Label Grid.Column="1" Text="{Binding RoundProgress}" FontSize="14"
+                       TextColor="{AppThemeBinding Light=#4B5563, Dark=#D1D5DB}"
+                       VerticalTextAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" RowSpacing="5" VerticalOptions="Fill">
+            <Label Text="{Binding NextExerciseText}" FontSize="13"
+                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}"
+                   HorizontalTextAlignment="Center" LineBreakMode="TailTruncation" />
+            <Border Grid.Row="1" MinimumHeightRequest="150"
+                    BackgroundColor="{AppThemeBinding Light=#E8F0FF, Dark=#172554}"
+                    Stroke="{AppThemeBinding Light=#BFDBFE, Dark=#1E40AF}" StrokeThickness="1">
+                <Border.StrokeShape><RoundRectangle CornerRadius="28" /></Border.StrokeShape>
+                <Grid Padding="12,9" RowDefinitions="Auto,Auto,*" RowSpacing="1">
+                    <Label Text="{Binding ExerciseName}" FontFamily="OpenSansSemibold"
+                           FontSize="{OnIdiom Phone=22, Tablet=29}"
+                           TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}"
+                           HorizontalTextAlignment="Center" MaxLines="2"
+                           LineBreakMode="TailTruncation"
+                           SemanticProperties.HeadingLevel="Level2" />
+                    <Label Grid.Row="1" Text="{Binding ExerciseProgress}" FontSize="14"
+                           TextColor="{AppThemeBinding Light=#4B5563, Dark=#CBD5E1}"
+                           HorizontalTextAlignment="Center" />
+                    <Label Grid.Row="2" Text="{Binding MainValue}" FontFamily="OpenSansSemibold"
+                           FontSize="{OnIdiom Phone=60, Tablet=80}"
+                           TextColor="{AppThemeBinding Light=#1D4ED8, Dark=#93C5FD}"
+                           HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                           AutomationId="MainWorkoutValue" />
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Label Grid.Row="3" IsVisible="{Binding HasError}" Text="{Binding ErrorMessage}"
+               FontSize="14" TextColor="{AppThemeBinding Light=#B91C1C, Dark=#FCA5A5}"
+               HorizontalTextAlignment="Center" MaxLines="3" />
+
+        <VerticalStackLayout Grid.Row="4" Spacing="9">
+            <Button Text="{Binding PrimaryButtonText}" Command="{Binding PrimaryCommand}"
+                    MinimumHeightRequest="58" FontFamily="OpenSansSemibold" FontSize="20"
+                    CornerRadius="18" BackgroundColor="{AppThemeBinding Light=#2563EB, Dark=#3B82F6}"
+                    TextColor="White" AutomationId="PrimaryButton" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Text="{Binding PauseButtonText}" Command="{Binding PauseCommand}"
+                        IsEnabled="{Binding IsPauseEnabled}" MinimumHeightRequest="50" FontSize="16"
+                        CornerRadius="15" BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                        TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}"
+                        AutomationId="PauseButton" />
+                <Button Grid.Column="1" Text="Preskoči" Command="{Binding SkipCommand}"
+                        IsEnabled="{Binding IsSkipEnabled}" MinimumHeightRequest="50" FontSize="16"
+                        CornerRadius="15" BackgroundColor="{AppThemeBinding Light=#E5E7EB, Dark=#374151}"
+                        TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}"
+                        AutomationId="SkipButton" />
+            </Grid>
+            <Button Text="Ponovo pokreni trening" Command="{Binding RestartCommand}"
+                    MinimumHeightRequest="44" FontSize="14" CornerRadius="14"
+                    BackgroundColor="Transparent"
+                    BorderColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}" BorderWidth="1"
+                    TextColor="{AppThemeBinding Light=#374151, Dark=#E5E7EB}"
+                    AutomationId="RestartButton" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
