@@ -9,12 +9,15 @@ namespace VodjeniTrening.Services;
 public interface IWorkoutService
 {
     Task<Workout> LoadAsync(CancellationToken cancellationToken = default);
+    Task SubmitFeedbackAsync(string comment, CancellationToken cancellationToken = default);
 }
 
 public sealed class WorkoutDataException(string message, Exception? innerException = null)
     : Exception(message, innerException);
 
-public sealed class WorkoutService(HttpClient httpClient) : IWorkoutService
+public sealed class WorkoutService(
+    HttpClient httpClient,
+    IAuthenticationSession authenticationSession) : IWorkoutService
 {
     private static readonly JsonSerializerOptions JsonOptions = new()
     {
@@ -25,21 +28,14 @@ public sealed class WorkoutService(HttpClient httpClient) : IWorkoutService
     {
         try
         {
-            using var loginResponse = await httpClient.PostAsJsonAsync(
-                "login",
-                new LoginRequest(ApiSettings.UserName, ApiSettings.UserPassword),
-                cancellationToken);
+            var token = authenticationSession.Token;
+            if (string.IsNullOrWhiteSpace(token))
+                throw new WorkoutDataException("Prvo se ulogujte da biste učitali trening.");
 
-            if (loginResponse.StatusCode == HttpStatusCode.Unauthorized)
-                throw new WorkoutDataException("Prijava na server nije uspela. Proverite korisničko ime i lozinku.");
-
-            loginResponse.EnsureSuccessStatusCode();
-            var login = await loginResponse.Content.ReadFromJsonAsync<LoginResponse>(
-                JsonOptions, cancellationToken)
-                ?? throw new WorkoutDataException("Server nije vratio podatke nakon prijave.");
-
-            using var trainingRequest = new HttpRequestMessage(HttpMethod.Get, "GetTraining");
-            trainingRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", login.Token);
+            var trainingDate = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
+            using var trainingRequest = new HttpRequestMessage(
+                HttpMethod.Get, $"GetTraining?date={trainingDate}");
+            trainingRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             using var trainingResponse = await httpClient.SendAsync(trainingRequest, cancellationToken);
             if (trainingResponse.StatusCode == HttpStatusCode.Unauthorized)
@@ -77,6 +73,50 @@ public sealed class WorkoutService(HttpClient httpClient) : IWorkoutService
         catch (Exception exception)
         {
             throw new WorkoutDataException("Trening nije moguće učitati sa servera.", exception);
+        }
+    }
+
+    public async Task SubmitFeedbackAsync(
+        string comment,
+        CancellationToken cancellationToken = default)
+    {
+        var token = authenticationSession.Token;
+        if (string.IsNullOrWhiteSpace(token))
+            throw new WorkoutDataException("Sesija je istekla. Ulogujte se ponovo.");
+
+        try
+        {
+            var trainingDate = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
+            using var request = new HttpRequestMessage(HttpMethod.Post, "feedback")
+            {
+                Content = JsonContent.Create(new FeedbackRequest(comment.Trim(), trainingDate))
+            };
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+            using var response = await httpClient.SendAsync(request, cancellationToken);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+                throw new WorkoutDataException("Sesija je istekla. Ulogujte se ponovo.");
+            if (response.StatusCode == HttpStatusCode.BadRequest)
+                throw new WorkoutDataException("Komentar nije moguće sačuvati. Proverite njegovu dužinu.");
+
+            response.EnsureSuccessStatusCode();
+        }
+        catch (WorkoutDataException)
+        {
+            throw;
+        }
+        catch (TaskCanceledException exception) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new WorkoutDataException("Server nije odgovorio na vreme.", exception);
+        }
+        catch (HttpRequestException exception)
+        {
+            throw new WorkoutDataException(
+                "Komentar nije poslat. Proverite internet konekciju.", exception);
+        }
+        catch (Exception exception)
+        {
+            throw new WorkoutDataException("Komentar trenutno nije moguće poslati.", exception);
         }
     }
 
@@ -134,13 +174,11 @@ public sealed class WorkoutService(HttpClient httpClient) : IWorkoutService
         }
     }
 
-    private sealed record LoginRequest(string UserName, string UserPassword);
-    private sealed record LoginResponse(string Token, DateTimeOffset ExpiresAtUtc);
+    private sealed record FeedbackRequest(string Comment, string TrainingDate);
+
 }
 
 public static class ApiSettings
 {
     public const string BaseUrl = "https://api.darkojakas.de/";
-    public const string UserName = "vodjenitrening";
-    public const string UserPassword = "PromeniMe-8081!";
 }

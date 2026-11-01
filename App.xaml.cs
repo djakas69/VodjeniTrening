@@ -2,16 +2,16 @@ namespace VodjeniTrening;
 
 public partial class App : Application
 {
-	private readonly MainPage _mainPage;
+	private readonly LoginPage _loginPage;
 
-	public App(MainPage mainPage)
+	public App(LoginPage loginPage)
 	{
 		InitializeComponent();
-		_mainPage = mainPage;
+		_loginPage = loginPage;
 	}
 
 	protected override Window CreateWindow(IActivationState? activationState)
 	{
-		return new Window(_mainPage);
+		return new Window(new NavigationPage(_loginPage));
 	}
 }

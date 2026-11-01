@@ -30,6 +30,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
     private bool _initialized;
     private bool _isPaused;
     private bool _countdownNeedsResume;
+    private bool _feedbackSubmitted;
     private string _workoutName = "Učitavanje treninga…";
     private string _blockName = "";
     private string _roundProgress = "";
@@ -50,6 +51,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+    public event EventHandler? FeedbackRequested;
 
     public string WorkoutName { get => _workoutName; private set => SetField(ref _workoutName, value); }
     public string BlockName { get => _blockName; private set => SetField(ref _blockName, value); }
@@ -66,7 +68,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
         SessionState.Ready => "Start",
         SessionState.Exercise => "Vežba u toku",
         SessionState.Rest => "Preskoči pauzu",
-        SessionState.Completed => "Ponovo pokreni",
+        SessionState.Completed => _feedbackSubmitted ? "Komentar je poslat" : "Kraj treninga",
         SessionState.Error => "Pokušaj ponovo",
         _ => "Sačekajte"
     };
@@ -129,7 +131,8 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
 
     private bool CanUsePrimary() => _state switch
     {
-        SessionState.Ready or SessionState.Rest or SessionState.Completed or SessionState.Error => true,
+        SessionState.Ready or SessionState.Rest or SessionState.Error => true,
+        SessionState.Completed => !_feedbackSubmitted,
         _ => false
     };
 
@@ -147,7 +150,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
                 await FinishRestAsync();
                 break;
             case SessionState.Completed:
-                await RestartCoreAsync();
+                FeedbackRequested?.Invoke(this, EventArgs.Empty);
                 break;
             case SessionState.Error:
                 await LoadWorkoutAsync();
@@ -208,6 +211,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
         _pendingTransition = PendingTransition.None;
         _isPaused = false;
         _countdownNeedsResume = false;
+        _feedbackSubmitted = false;
         _remainingSeconds = 0;
         _remainingRepetitions = 0;
         ErrorMessage = "";
@@ -340,6 +344,12 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
         NextExerciseText = "";
         MainValue = "✓";
         SetState(SessionState.Completed);
+    }
+
+    public void MarkFeedbackSubmitted()
+    {
+        _feedbackSubmitted = true;
+        NotifyControls();
     }
 
     private void StartCountdown(int seconds)

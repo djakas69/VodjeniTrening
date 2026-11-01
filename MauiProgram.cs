@@ -26,9 +26,16 @@ public static class MauiProgram
 			BaseAddress = new Uri(ApiSettings.BaseUrl),
 			Timeout = TimeSpan.FromSeconds(15)
 		});
+		builder.Services.AddSingleton<AuthenticationService>();
+		builder.Services.AddSingleton<IAuthenticationService>(serviceProvider =>
+			serviceProvider.GetRequiredService<AuthenticationService>());
+		builder.Services.AddSingleton<IAuthenticationSession>(serviceProvider =>
+			serviceProvider.GetRequiredService<AuthenticationService>());
 		builder.Services.AddSingleton<IWorkoutService, WorkoutService>();
 		builder.Services.AddSingleton<WorkoutViewModel>();
 		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<RegisterPage>();
+		builder.Services.AddSingleton<LoginPage>();
 
 		return builder.Build();
 	}
