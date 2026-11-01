@@ -80,12 +80,18 @@
                         TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}"
                         AutomationId="SkipButton" />
             </Grid>
-            <Button Text="Ponovo pokreni trening" Command="{Binding RestartCommand}"
-                    MinimumHeightRequest="44" FontSize="14" CornerRadius="14"
-                    BackgroundColor="Transparent"
-                    BorderColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}" BorderWidth="1"
-                    TextColor="{AppThemeBinding Light=#374151, Dark=#E5E7EB}"
-                    AutomationId="RestartButton" />
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Text="Ponovo pokreni" Command="{Binding RestartCommand}"
+                        MinimumHeightRequest="44" FontSize="14" CornerRadius="14"
+                        BackgroundColor="Transparent"
+                        BorderColor="{AppThemeBinding Light=#9CA3AF, Dark=#6B7280}" BorderWidth="1"
+                        TextColor="{AppThemeBinding Light=#374151, Dark=#E5E7EB}"
+                        AutomationId="RestartButton" />
+                <Button Grid.Column="1" Text="Istorija treninga" Clicked="OnHistoryClicked"
+                        MinimumHeightRequest="44" FontSize="14" CornerRadius="14"
+                        BackgroundColor="Transparent" BorderColor="#2563EB" BorderWidth="1"
+                        TextColor="#2563EB" AutomationId="HistoryButton" />
+            </Grid>
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

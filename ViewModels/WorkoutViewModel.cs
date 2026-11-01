@@ -31,6 +31,8 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
     private bool _isPaused;
     private bool _countdownNeedsResume;
     private bool _feedbackSubmitted;
+    private DateTimeOffset? _workoutStartedAtUtc;
+    private int _completedDurationSeconds;
     private string _workoutName = "Učitavanje treninga…";
     private string _blockName = "";
     private string _roundProgress = "";
@@ -68,7 +70,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
         SessionState.Ready => "Start",
         SessionState.Exercise => "Vežba u toku",
         SessionState.Rest => "Preskoči pauzu",
-        SessionState.Completed => _feedbackSubmitted ? "Komentar je poslat" : "Kraj treninga",
+        SessionState.Completed => _feedbackSubmitted ? "Trening je sačuvan" : "Kraj treninga",
         SessionState.Error => "Pokušaj ponovo",
         _ => "Sačekajte"
     };
@@ -81,6 +83,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
     public ICommand PauseCommand => _pauseCommand;
     public ICommand SkipCommand => _skipCommand;
     public ICommand RestartCommand => _restartCommand;
+    public int CompletedDurationSeconds => _completedDurationSeconds;
 
     private WorkoutBlock? CurrentBlock => _workout?.Blocks.ElementAtOrDefault(_blockIndex);
     private Exercise? CurrentExercise => CurrentBlock?.Exercises.ElementAtOrDefault(_exerciseIndex);
@@ -141,6 +144,7 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
         switch (_state)
         {
             case SessionState.Ready:
+                _workoutStartedAtUtc = DateTimeOffset.UtcNow;
                 await StartExerciseAsync();
                 break;
             case SessionState.Exercise:
@@ -212,6 +216,8 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
         _isPaused = false;
         _countdownNeedsResume = false;
         _feedbackSubmitted = false;
+        _workoutStartedAtUtc = null;
+        _completedDurationSeconds = 0;
         _remainingSeconds = 0;
         _remainingRepetitions = 0;
         ErrorMessage = "";
@@ -336,6 +342,10 @@ public sealed class WorkoutViewModel : INotifyPropertyChanged
         _remainingRepetitions = 0;
         _pendingTransition = PendingTransition.None;
         _isPaused = false;
+        _completedDurationSeconds = _workoutStartedAtUtc is null
+            ? 0
+            : Math.Max(1, (int)Math.Round(
+                (DateTimeOffset.UtcNow - _workoutStartedAtUtc.Value).TotalSeconds));
         StatusText = "Trening završen";
         BlockName = "Bravo!";
         RoundProgress = "";
