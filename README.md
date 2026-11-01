@@ -1,8 +1,9 @@
 # Vođeni trening
 
-.NET MAUI aplikacija za iOS i Android. Pri pokretanju se prijavljuje na
-`VodjeniTreningApi`, dobija privremeni Bearer token i preuzima aktuelni trening
-preko `GetTraining` endpointa.
+.NET MAUI aplikacija za iOS i Android. Korisnik može da kreira nalog i da se
+prijavi na `VodjeniTreningApi`. Nakon prijave aplikacija dobija privremeni Bearer
+token i preuzima trening dodeljen tom korisniku za današnji datum. Posle
+završenog treninga korisnik može da pošalje komentar ili da ga preskoči.
 
 Web API se razvija u zasebnom repozitorijumu:
 [djakas69/VodjeniTreningApi](https://github.com/djakas69/VodjeniTreningApi).
@@ -17,8 +18,8 @@ Web API se razvija u zasebnom repozitorijumu:
 Na Mac-u projekat automatski koristi `net10.0-ios`, a na Windows-u
 `net10.0-android`.
 
-Adresa API-ja i početni pristupni podaci nalaze se u `ApiSettings` u
-`Services/WorkoutService.cs`. Trenutna API adresa je:
+Adresa API-ja nalazi se u `ApiSettings` u `Services/WorkoutService.cs`.
+Korisnički podaci nisu ugrađeni u mobilnu aplikaciju. Trenutna API adresa je:
 
 ```text
 https://api.darkojakas.de/

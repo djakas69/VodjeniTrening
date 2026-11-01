@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VodjeniTrening.RegisterPage"
+             Title="Kreiraj nalog"
+             SafeAreaEdges="All"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FB, Dark=#111827}">
+    <ScrollView>
+        <VerticalStackLayout Padding="26,34,26,28" Spacing="16"
+                             MaximumWidthRequest="520" HorizontalOptions="Fill">
+            <VerticalStackLayout Spacing="6" Margin="0,0,0,14">
+                <Label Text="Kreiraj nalog" FontFamily="OpenSansSemibold" FontSize="30"
+                       HorizontalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}" />
+                <Label Text="Izaberite korisničko ime i sigurnu lozinku"
+                       FontSize="15" HorizontalTextAlignment="Center"
+                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+            </VerticalStackLayout>
+
+            <Label Text="Korisničko ime" FontFamily="OpenSansSemibold" FontSize="15" />
+            <Border Padding="14,4" BackgroundColor="{AppThemeBinding Light=White, Dark=#1F2937}"
+                    Stroke="{AppThemeBinding Light=#D1D5DB, Dark=#4B5563}">
+                <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                <Entry x:Name="UserNameEntry" Placeholder="Najmanje 3 znaka"
+                       ReturnType="Next" ClearButtonVisibility="WhileEditing"
+                       AutomationId="RegisterUserName" />
+            </Border>
+
+            <Label Text="Lozinka" FontFamily="OpenSansSemibold" FontSize="15" />
+            <Border Padding="14,4" BackgroundColor="{AppThemeBinding Light=White, Dark=#1F2937}"
+                    Stroke="{AppThemeBinding Light=#D1D5DB, Dark=#4B5563}">
+                <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                <Entry x:Name="PasswordEntry" Placeholder="Najmanje 8 znakova"
+                       IsPassword="True" ReturnType="Next" AutomationId="RegisterPassword" />
+            </Border>
+
+            <Label Text="Ponovite lozinku" FontFamily="OpenSansSemibold" FontSize="15" />
+            <Border Padding="14,4" BackgroundColor="{AppThemeBinding Light=White, Dark=#1F2937}"
+                    Stroke="{AppThemeBinding Light=#D1D5DB, Dark=#4B5563}">
+                <Border.StrokeShape><RoundRectangle CornerRadius="14" /></Border.StrokeShape>
+                <Entry x:Name="ConfirmPasswordEntry" Placeholder="Ponovo unesite lozinku"
+                       IsPassword="True" ReturnType="Go" Completed="OnRegisterClicked"
+                       AutomationId="RegisterConfirmPassword" />
+            </Border>
+
+            <Label Text="Korisničko ime može sadržati slova, brojeve, tačku, crtu i donju crtu."
+                   FontSize="13" TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+            <Label x:Name="ErrorLabel" IsVisible="False" FontSize="14" TextColor="#B91C1C"
+                   HorizontalTextAlignment="Center" MaxLines="3" />
+            <ActivityIndicator x:Name="BusyIndicator" IsVisible="False" IsRunning="False"
+                               Color="#2563EB" />
+
+            <Button x:Name="RegisterButton" Text="Kreiraj nalog" Clicked="OnRegisterClicked"
+                    MinimumHeightRequest="58" FontFamily="OpenSansSemibold" FontSize="19"
+                    CornerRadius="18" BackgroundColor="#2563EB" TextColor="White"
+                    AutomationId="RegisterButton" />
+            <Button Text="Nazad na prijavu" Clicked="OnBackClicked" MinimumHeightRequest="48"
+                    FontSize="15" BackgroundColor="Transparent" TextColor="#2563EB" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+
