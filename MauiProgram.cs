@@ -34,6 +34,7 @@ public static class MauiProgram
 		builder.Services.AddSingleton<IWorkoutService, WorkoutService>();
 		builder.Services.AddSingleton<WorkoutViewModel>();
 		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddSingleton<HistoryPage>();
 		builder.Services.AddSingleton<RegisterPage>();
 		builder.Services.AddSingleton<LoginPage>();
 

@@ -7,13 +7,18 @@ public partial class MainPage : ContentPage
 {
     private readonly WorkoutViewModel _viewModel;
     private readonly IWorkoutService _workoutService;
+    private readonly HistoryPage _historyPage;
     private bool _feedbackDialogOpen;
 
-    public MainPage(WorkoutViewModel viewModel, IWorkoutService workoutService)
+    public MainPage(
+        WorkoutViewModel viewModel,
+        IWorkoutService workoutService,
+        HistoryPage historyPage)
     {
         InitializeComponent();
         BindingContext = _viewModel = viewModel;
         _workoutService = workoutService;
+        _historyPage = historyPage;
         _viewModel.FeedbackRequested += OnFeedbackRequested;
     }
 
@@ -46,25 +51,23 @@ public partial class MainPage : ContentPage
                 maxLength: 2000,
                 keyboard: Keyboard.Text);
 
-            if (comment is null)
-                return;
-            if (string.IsNullOrWhiteSpace(comment))
-            {
-                await DisplayAlertAsync("Komentar", "Unesite komentar ili izaberite Otkaži.", "U redu");
-                return;
-            }
-
-            await _workoutService.SubmitFeedbackAsync(comment);
+            await _workoutService.SubmitWorkoutResultAsync(
+                string.IsNullOrWhiteSpace(comment) ? null : comment,
+                _viewModel.CompletedDurationSeconds);
             _viewModel.MarkFeedbackSubmitted();
-            await DisplayAlertAsync("Hvala", "Komentar je uspešno poslat.", "U redu");
+            if (!string.IsNullOrWhiteSpace(comment))
+                await DisplayAlertAsync("Hvala", "Komentar je uspešno poslat.", "U redu");
         }
         catch (WorkoutDataException exception)
         {
-            await DisplayAlertAsync("Komentar nije poslat", exception.Message, "U redu");
+            await DisplayAlertAsync("Trening nije sačuvan", exception.Message, "U redu");
         }
         finally
         {
             _feedbackDialogOpen = false;
         }
     }
+
+    private async void OnHistoryClicked(object? sender, EventArgs e) =>
+        await Navigation.PushAsync(_historyPage);
 }

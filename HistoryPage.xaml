@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="VodjeniTrening.HistoryPage"
+             Title="Istorija treninga"
+             SafeAreaEdges="All"
+             BackgroundColor="{AppThemeBinding Light=#F5F7FB, Dark=#111827}">
+    <Grid Padding="20,18,20,16" RowDefinitions="Auto,Auto,*" RowSpacing="14"
+          MaximumWidthRequest="720" HorizontalOptions="Fill">
+        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+            <VerticalStackLayout Spacing="3">
+                <Label Text="Istorija treninga" FontFamily="OpenSansSemibold" FontSize="27"
+                       TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}" />
+                <Label Text="Trajanje i zapažanja po danima" FontSize="14"
+                       TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+            </VerticalStackLayout>
+            <Button Grid.Column="1" Text="Osveži" Clicked="OnRefreshClicked"
+                    BackgroundColor="Transparent" TextColor="#2563EB" FontSize="14" />
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <ActivityIndicator x:Name="BusyIndicator" IsVisible="False" IsRunning="False"
+                               Color="#2563EB" />
+            <Label x:Name="ErrorLabel" IsVisible="False" TextColor="#B91C1C"
+                   HorizontalTextAlignment="Center" FontSize="14" />
+        </Grid>
+
+        <CollectionView Grid.Row="2" x:Name="HistoryCollection" SelectionMode="None">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="20,50" Spacing="8">
+                    <Label Text="Još nema završenih treninga" FontFamily="OpenSansSemibold"
+                           FontSize="18" HorizontalTextAlignment="Center"
+                           TextColor="{AppThemeBinding Light=#374151, Dark=#E5E7EB}" />
+                    <Label Text="Završeni treninzi će se pojaviti ovde."
+                           FontSize="14" HorizontalTextAlignment="Center"
+                           TextColor="{AppThemeBinding Light=#6B7280, Dark=#9CA3AF}" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,0,0,12" Padding="16,14"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark=#1F2937}"
+                            Stroke="{AppThemeBinding Light=#E5E7EB, Dark=#374151}" StrokeThickness="1">
+                        <Border.StrokeShape><RoundRectangle CornerRadius="18" /></Border.StrokeShape>
+                        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto"
+                              RowSpacing="6" ColumnSpacing="12">
+                            <Label Text="{Binding DateText}" FontFamily="OpenSansSemibold" FontSize="18"
+                                   TextColor="{AppThemeBinding Light=#111827, Dark=#F9FAFB}" />
+                            <Label Grid.Column="1" Text="{Binding DurationText}" FontSize="13"
+                                   VerticalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light=#2563EB, Dark=#93C5FD}" />
+                            <Label Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding TrainingName}"
+                                   FontFamily="OpenSansSemibold" FontSize="15"
+                                   TextColor="{AppThemeBinding Light=#374151, Dark=#E5E7EB}" />
+                            <Label Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding CommentText}"
+                                   FontSize="14" LineBreakMode="WordWrap"
+                                   TextColor="{AppThemeBinding Light=#6B7280, Dark=#D1D5DB}" />
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

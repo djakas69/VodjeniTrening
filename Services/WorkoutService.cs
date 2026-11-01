@@ -9,7 +9,12 @@ namespace VodjeniTrening.Services;
 public interface IWorkoutService
 {
     Task<Workout> LoadAsync(CancellationToken cancellationToken = default);
-    Task SubmitFeedbackAsync(string comment, CancellationToken cancellationToken = default);
+    Task SubmitWorkoutResultAsync(
+        string? comment,
+        int durationSeconds,
+        CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<WorkoutHistoryItem>> LoadHistoryAsync(
+        CancellationToken cancellationToken = default);
 }
 
 public sealed class WorkoutDataException(string message, Exception? innerException = null)
@@ -76,8 +81,9 @@ public sealed class WorkoutService(
         }
     }
 
-    public async Task SubmitFeedbackAsync(
-        string comment,
+    public async Task SubmitWorkoutResultAsync(
+        string? comment,
+        int durationSeconds,
         CancellationToken cancellationToken = default)
     {
         var token = authenticationSession.Token;
@@ -89,7 +95,8 @@ public sealed class WorkoutService(
             var trainingDate = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
             using var request = new HttpRequestMessage(HttpMethod.Post, "feedback")
             {
-                Content = JsonContent.Create(new FeedbackRequest(comment.Trim(), trainingDate))
+                Content = JsonContent.Create(new FeedbackRequest(
+                    comment?.Trim(), trainingDate, Math.Max(0, durationSeconds)))
             };
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
@@ -97,7 +104,7 @@ public sealed class WorkoutService(
             if (response.StatusCode == HttpStatusCode.Unauthorized)
                 throw new WorkoutDataException("Sesija je istekla. Ulogujte se ponovo.");
             if (response.StatusCode == HttpStatusCode.BadRequest)
-                throw new WorkoutDataException("Komentar nije moguće sačuvati. Proverite njegovu dužinu.");
+                throw new WorkoutDataException("Rezultat treninga nije moguće sačuvati.");
 
             response.EnsureSuccessStatusCode();
         }
@@ -112,11 +119,49 @@ public sealed class WorkoutService(
         catch (HttpRequestException exception)
         {
             throw new WorkoutDataException(
-                "Komentar nije poslat. Proverite internet konekciju.", exception);
+                "Rezultat treninga nije sačuvan. Proverite internet konekciju.", exception);
         }
         catch (Exception exception)
         {
-            throw new WorkoutDataException("Komentar trenutno nije moguće poslati.", exception);
+            throw new WorkoutDataException("Rezultat treninga trenutno nije moguće sačuvati.", exception);
+        }
+    }
+
+    public async Task<IReadOnlyList<WorkoutHistoryItem>> LoadHistoryAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var token = authenticationSession.Token;
+        if (string.IsNullOrWhiteSpace(token))
+            throw new WorkoutDataException("Sesija je istekla. Ulogujte se ponovo.");
+
+        try
+        {
+            using var request = new HttpRequestMessage(HttpMethod.Get, "history?limit=100");
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            using var response = await httpClient.SendAsync(request, cancellationToken);
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
+                throw new WorkoutDataException("Sesija je istekla. Ulogujte se ponovo.");
+
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<List<WorkoutHistoryItem>>(
+                JsonOptions, cancellationToken) ?? [];
+        }
+        catch (WorkoutDataException)
+        {
+            throw;
+        }
+        catch (TaskCanceledException exception) when (!cancellationToken.IsCancellationRequested)
+        {
+            throw new WorkoutDataException("Server nije odgovorio na vreme.", exception);
+        }
+        catch (HttpRequestException exception)
+        {
+            throw new WorkoutDataException(
+                "Istoriju nije moguće učitati. Proverite internet konekciju.", exception);
+        }
+        catch (Exception exception)
+        {
+            throw new WorkoutDataException("Istoriju treninga trenutno nije moguće učitati.", exception);
         }
     }
 
@@ -174,7 +219,10 @@ public sealed class WorkoutService(
         }
     }
 
-    private sealed record FeedbackRequest(string Comment, string TrainingDate);
+    private sealed record FeedbackRequest(
+        string? Comment,
+        string TrainingDate,
+        int DurationSeconds);
 
 }
 

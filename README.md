@@ -4,6 +4,8 @@
 prijavi na `VodjeniTreningApi`. Nakon prijave aplikacija dobija privremeni Bearer
 token i preuzima trening dodeljen tom korisniku za današnji datum. Posle
 završenog treninga korisnik može da pošalje komentar ili da ga preskoči.
+Stranica „Istorija treninga“ prikazuje datum, naziv, trajanje i komentar za
+svaki sačuvani trening.
 
 Web API se razvija u zasebnom repozitorijumu:
 [djakas69/VodjeniTreningApi](https://github.com/djakas69/VodjeniTreningApi).
